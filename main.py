@@ -1,10 +1,20 @@
-from cleaner.clean_folder import main as cleanerMain
+from cleaner.clean_folder 	import main as cleanerMain
+from scraper.scraper		import scrape_website
 
 import re
+import time
 
 def main():
+	GLOBAL_START_TIME = time.time()
+
+	result = print(scrape_website('https://www.quitoque.fr/recette/10000', r'./msedgedriver.exe'))
+	if result != None:
+		print(f"Error during scrap: {result}")
+
+	GLOBAL_ENDED_TIME = time.time()
+
     # End of scrapping message
-    print("Scrapping ended.")
+	print(f"Scrapping ended. {GLOBAL_ENDED_TIME - GLOBAL_START_TIME}")
 
 # Script entry point
 if __name__ == "__main__":
