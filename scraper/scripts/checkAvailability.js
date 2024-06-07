@@ -7,7 +7,7 @@ function checkRecipeAvailability(xpath) {
         return { success: true, message: 'Recipe available' };
     } catch (error) {
         console.error('Error in ' + checkRecipeAvailability.name + ' function:', error);
-        return { success: false, message: 'Error in checkRecipeAvailability function!' };
+        return { success: false, message: 'Error in checkRecipeAvailability function: ' + error};
     }
 }
 
@@ -19,7 +19,7 @@ function checkHelpCategoryAvailability(xpath) {
         return { success: true, message: 'Help category available' };
     } catch (error) {
         console.error('Error in ' + checkHelpCategoryAvailability.name + ' function:', error);
-        return { success: false, message: 'Error in checkHelpCategoryAvailability function!' };
+        return { success: false, message: 'Error in checkHelpCategoryAvailability function: ' + error};
     }
 }
 
@@ -40,7 +40,7 @@ function checkAvailability(xpaths) {
         }
     } catch (error) {
         console.error('Error in ' + checkAvailability.name + ' function:', error);
-        return { success: false, message: 'Error in checkAvailability function!' };
+        return { success: false, message: 'Error in checkAvailability function: ' + error};
     }
 
     return { success: true, message: 'Elements checked successfully!' };

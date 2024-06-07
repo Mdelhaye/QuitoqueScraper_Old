@@ -1,15 +1,15 @@
 from cleaner.clean_folder 	import main as cleanerMain
-from scraper.scraper		import scrape_website
+from scraper.scraper		import scrape_urls
 
 import re
 import time
+import pprint
 
 def main():
 	GLOBAL_START_TIME = time.time()
 
-	result = print(scrape_website('https://www.quitoque.fr/recette/10000', r'./msedgedriver.exe'))
-	if result != None:
-		print(f"Error during scrap: {result}")
+	urls = [f'https://www.quitoque.fr/recette/{i}' for i in range(10000, 10000 + 10)]
+	pprint.pprint(scrape_urls(urls, r'./msedgedriver.exe'))
 
 	GLOBAL_ENDED_TIME = time.time()
 
@@ -27,6 +27,8 @@ if __name__ == "__main__":
 		selection = selection if re.match(r'^(\d)$', selection) else 1
 
 	if int(selection) == 2:
+		print('\nCalling cleaning method.\n')
 		cleanerMain()	# Calls the Main function of clean_folder.py if the option selected is "2"
 	elif int(selection) == 1:
-	 	main()	# Calls the Main function if the option selected is "1" or wrong
+		print('\nCalling scrapping method.\n')
+		main()  # Calls the Main function if the option selected is "1" or wrong

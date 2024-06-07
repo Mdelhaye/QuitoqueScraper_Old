@@ -40,7 +40,7 @@ function manipulateElements(itemsToRemove, indicesToRemove, itemsToClick, indice
         
     } catch (error) {
         console.error('Error in manipulateElements function:', error);
-        return { success: false, message: 'Error in manipulateElements function!' };
+        return { success: false, message: 'Error in manipulateElements function: ' + error};
     }
     
     return { success: true, message: 'Elements removed/clicked successfully!' };
