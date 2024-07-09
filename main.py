@@ -1,5 +1,6 @@
 from cleaner.clean_folder 	import main as cleanerMain
 from scraper.scraper		import scrape_urls
+from scraper.config			import BASE_URL, START_INDEX, NB_RECIPES, WEBDRIVER_PATH
 
 import re
 import time
@@ -8,8 +9,8 @@ import pprint
 def main():
 	GLOBAL_START_TIME = time.time()
 
-	urls = [f'https://www.quitoque.fr/recette/{i}' for i in range(10000, 10000 + 10)]
-	pprint.pprint(scrape_urls(urls, r'./msedgedriver.exe'))
+	urls = [f'{BASE_URL}{i}' for i in range(START_INDEX, START_INDEX + NB_RECIPES)]
+	pprint.pprint(scrape_urls(urls, WEBDRIVER_PATH))
 
 	GLOBAL_ENDED_TIME = time.time()
 

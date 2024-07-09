@@ -4,12 +4,12 @@ from selenium                           import webdriver                # Import
 from selenium.webdriver.edge.service    import Service as EdgeService   # Importing the service for Microsoft Edge
 from selenium.webdriver.edge.options    import Options                  # Importing options for Microsoft Edge
 
-from scraper.utils  import handle_cookie_popup
+from scraper.utils  import handle_cookie_popup, print_to_pdf, extract_images_from_pdf, pdf_is_correct, pdf_exist
 from scraper.config import (RECIPE_UNVAILABLE_XPATH, HELP_CATEGORY_XPATH,
 							HEADER_AND_FOOTER_XPATH, HEADER_AND_FOOTER_OLD_VERSION_INDICES, HEADER_AND_FOOTER_NEW_VERSION_INDICES,
 							BACK_TO_MENU_BUTTON_XPATH, BACK_TO_MENU_BUTTON_INDICES,
 							VIEW_DETAILS_BUTTON_XPATH, VIEW_DETAILS_BUTTON_INDICES,
-                            ADD_PERSONN_BUTTON_XPATH)
+                            ADD_PERSONN_BUTTON_XPATH, OUTPUT_DIR, MAX_WORKERS)
 
 from scraper.script import CHECK_RECIPE_AVAILABILITY_SCRIPT, MANIPULATE_ELEMENTS_SCRIPT, ADD_PERSONS_SCRIPT
 
@@ -24,6 +24,7 @@ def initialize_browser(webdriver_path):
     )
 
     service = EdgeService(webdriver_path)
+
     return webdriver.Edge(service=service, options=edge_options)
 
 def scrape_website(url, webdriver_path, max_retry = 0):
@@ -34,8 +35,12 @@ def scrape_website(url, webdriver_path, max_retry = 0):
         driver = initialize_browser(webdriver_path)
         driver.get(url)
 
-        handle_cookie_popup(driver)
+        if pdf_exist(driver.title) and driver.title != 'Quitoque':
+            error = {'url': url, 'error': False, 'message': 'PDF already exists!'}
+            return
 
+        handle_cookie_popup(driver)
+        
         recipe_unvailable_result = driver.execute_script(CHECK_RECIPE_AVAILABILITY_SCRIPT + " return checkAvailability(" + str([f"{RECIPE_UNVAILABLE_XPATH}", f"{HELP_CATEGORY_XPATH}"]) + ");")
         if recipe_unvailable_result['success'] == False:
             error = {'url': url, 'error': True, 'message': str(recipe_unvailable_result['message'])}
@@ -49,11 +54,17 @@ def scrape_website(url, webdriver_path, max_retry = 0):
         add_personn_result = driver.execute_script(ADD_PERSONS_SCRIPT + " return addPersons('" + ADD_PERSONN_BUTTON_XPATH + "')")
         if add_personn_result['success'] == False:
             error = {'url': url, 'error': True, 'message': str(add_personn_result['message'])}
-        
+
     except Exception as e:
         result.append({'url': url, 'error': True, 'message': str(e)})
         
-    finally:
+    else: 
+        if not pdf_exist(driver.title) and driver.title != 'Quitoque':
+            print_to_pdf(driver)
+            if pdf_is_correct(extract_images_from_pdf(OUTPUT_DIR + f'/{driver.title}.pdf')) == False:
+                print(f"{url}: pdf seems to be incorrect!")
+
+    finally:        
         driver.quit()
         if error == None:
             result.append({'url': url, 'error': False})
@@ -61,10 +72,10 @@ def scrape_website(url, webdriver_path, max_retry = 0):
             result.append(error)
         return result
 
-def scrape_urls(urls, webdriver_path, max_workers = 10):
+def scrape_urls(urls, webdriver_path, max_workers = MAX_WORKERS):
     """ Scrapes multiple URLs concurrently. """
     all_results = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers = max_workers) as executor:
         futures = [executor.submit(scrape_website, url, webdriver_path) for url in urls]
         for future in concurrent.futures.as_completed(futures):
             try:

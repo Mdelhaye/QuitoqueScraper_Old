@@ -14,9 +14,9 @@ function checkRecipeAvailability(xpath) {
 function checkHelpCategoryAvailability(xpath) {
     try {
         if (document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue !== null) {
-            return { success: false, message: 'Help category unavailable!' };
+            return { success: false, message: 'Help category available!' };
         }
-        return { success: true, message: 'Help category available' };
+        return { success: true, message: 'Help category unavailable' };
     } catch (error) {
         console.error('Error in ' + checkHelpCategoryAvailability.name + ' function:', error);
         return { success: false, message: 'Error in checkHelpCategoryAvailability function: ' + error};
