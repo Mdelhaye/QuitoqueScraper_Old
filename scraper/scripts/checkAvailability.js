@@ -2,7 +2,7 @@
 function checkRecipeAvailability(xpath) {
     try {
         if (document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue !== null) {
-            return { success: false, message: 'Recipe unavailable!' };
+            return { success: true, message: 'Recipe unavailable!' };
         }
         return { success: true, message: 'Recipe available' };
     } catch (error) {
@@ -14,7 +14,7 @@ function checkRecipeAvailability(xpath) {
 function checkHelpCategoryAvailability(xpath) {
     try {
         if (document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue !== null) {
-            return { success: false, message: 'Help category available!' };
+            return { success: true, message: 'Help category available!' };
         }
         return { success: true, message: 'Help category unavailable' };
     } catch (error) {

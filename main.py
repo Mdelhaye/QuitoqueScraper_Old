@@ -4,15 +4,17 @@ from scraper.config			import BASE_URL, START_INDEX, NB_RECIPES, WEBDRIVER_PATH
 
 import re
 import time
-import pprint
 
 def main():
 	GLOBAL_START_TIME = time.time()
 
 	urls = [f'{BASE_URL}{i}' for i in range(START_INDEX, START_INDEX + NB_RECIPES)]
-	pprint.pprint(scrape_urls(urls, WEBDRIVER_PATH))
+	results = scrape_urls(urls, WEBDRIVER_PATH)
 
 	GLOBAL_ENDED_TIME = time.time()
+
+	for result in results:
+		print(result)
 
     # End of scrapping message
 	print(f"Scrapping ended. {GLOBAL_ENDED_TIME - GLOBAL_START_TIME}")
@@ -24,7 +26,7 @@ if __name__ == "__main__":
 
 	selection = 0
 	while int(selection) != 1 and int(selection) != 2:
-		selection = input("--> Choose between the options (default Scraper): ")
+		selection = input("--> Choose between the options (default 1): ")
 		selection = selection if re.match(r'^(\d)$', selection) else 1
 
 	if int(selection) == 2:

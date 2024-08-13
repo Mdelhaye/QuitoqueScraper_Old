@@ -2,7 +2,7 @@ import os
 
 BASE_URL        = 'https://www.quitoque.fr/recette/'
 START_INDEX     = 10000
-NB_RECIPES      = 10
+NB_RECIPES      = 50
 MAX_WORKERS     = 10
 WEBDRIVER_PATH  = r'./msedgedriver.exe'
 OUTPUT_DIR	= r'./PDF'
@@ -21,9 +21,6 @@ HEADER_AND_FOOTER_OLD_VERSION_INDICES	= [0, 4, 5, 6]
 HEADER_AND_FOOTER_NEW_VERSION_INDICES	= [0, 3, 5, 6, 7, 8]
 BACK_TO_MENU_BUTTON_INDICES				= [0]
 VIEW_DETAILS_BUTTON_INDICES				= [0, 1]
-
-if not os.path.exists(WEBDRIVER_PATH):
-    raise FileNotFoundError(f'WebDriver doesn\'t exists in : {WEBDRIVER_PATH}')
 
 if not os.path.exists(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
